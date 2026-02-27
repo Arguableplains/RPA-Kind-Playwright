@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: redis-server
+  namespace: redis-server
+data:
+  ALLOW_EMPTY_PASSWORD: "yes"
