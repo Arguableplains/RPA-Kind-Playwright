@@ -4,4 +4,4 @@ metadata:
   name: redis-server
   namespace: redis-server
 data:
-  ALLOW_EMPTY_PASSWORD: "yes"
+  ALLOW_EMPTY_PASSWORD: "true"

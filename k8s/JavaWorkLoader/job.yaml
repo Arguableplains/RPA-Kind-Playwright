@@ -20,14 +20,7 @@ spec:
           command: ["java"]
           args:
             - "-jar"
-            - "/data/jar-runner/app.jar"
-            - "--param1=$(PARAM1)"
-            - "--param2=$(PARAM2)"
-          env:
-            - name: PARAM1
-              value: "default1"
-            - name: PARAM2
-              value: "default2"
+            - "/data/jar-runner/redis-task-publisher.jar"
           volumeMounts:
             - name: jar-volume
               mountPath: /data/jar-runner
