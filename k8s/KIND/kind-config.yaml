@@ -5,3 +5,5 @@ nodes:
     extraMounts:
       - hostPath: /data/jar-runner
         containerPath: /data/jar-runner
+      - hostPath: /data/job-orchestrator
+        containerPath: /data/job-orchestrator/
