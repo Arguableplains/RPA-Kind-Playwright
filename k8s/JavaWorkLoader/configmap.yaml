@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jar-runner-config
+  namespace: java-work-loader
+data:
+  JAVA_OPTS: "-Xms256m -Xmx512m"

@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: jar-runner-job-
+  namespace: java-work-loader
+  labels:
+    app: jar-runner
+    type: template
+spec:
+  ttlSecondsAfterFinished: 60
+  template:
+    metadata:
+      labels:
+        app: jar-runner
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: jar-runner
+          image: eclipse-temurin:21
+          command: ["java"]
+          args:
+            - "-jar"
+            - "/data/jar-runner/app.jar"
+            - "--param1=$(PARAM1)"
+            - "--param2=$(PARAM2)"
+          env:
+            - name: PARAM1
+              value: "default1"
+            - name: PARAM2
+              value: "default2"
+          volumeMounts:
+            - name: jar-volume
+              mountPath: /data/jar-runner
+      volumes:
+        - name: jar-volume
+          persistentVolumeClaim:
+            claimName: jar-storage

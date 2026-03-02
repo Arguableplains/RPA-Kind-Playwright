@@ -20,10 +20,6 @@ spec:
       labels:
         app:  redis-server
     spec:
-      # initContainers:
-        # Init containers are exactly like regular containers, except:
-          # - Init containers always run to completion.
-          # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  redis-server
         image:  redis:8.4.2
