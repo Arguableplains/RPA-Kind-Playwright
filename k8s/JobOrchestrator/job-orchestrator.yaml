@@ -1,24 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: job-orchestrator
+  generateName: job-orchestrator-
   namespace: job-orchestrator
   labels:
     app: job-orchestrator
+    type: template
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: job-orchestrator
+  ttlSecondsAfterFinished: 60
   template:
     metadata:
+      name: job-orchestrator
       labels:
         app: job-orchestrator
     spec:
       restartPolicy: OnFailure
       containers:
       - name: job-orchestrator
-        image: python:3.13.12-slim
+        image: rpa_kind_playwright/job-orchestrator:1.0
         command: ["python3"]
         args:
           - "/data/job-orchestrator/orchestrator.py"

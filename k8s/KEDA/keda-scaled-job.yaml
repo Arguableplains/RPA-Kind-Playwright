@@ -1,0 +1,43 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: job-orchestrator-scaled
+  namespace: job-orchestrator
+spec:
+  jobTargetRef:
+    parallelism: 1
+    completions: 1
+    backoffLimit: 4
+    template:
+      metadata:
+        labels:
+          app: job-orchestrator
+      spec:
+        restartPolicy: OnFailure
+        containers:
+        - name: job-orchestrator
+          image: rpa_kind_playwright/job-orchestrator:1.0
+          volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+          - name: job-orchestrator-volume
+            mountPath: /data/job-orchestrator/
+        volumes:
+        - name: localtime
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: job-orchestrator-volume
+          persistentVolumeClaim:
+            claimName: job-orchestrator-storage
+  pollingInterval: 5
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  maxReplicaCount: 10
+  triggers:
+  - type: redis
+    metadata:
+      address: redis-server.redis-server.svc.cluster.local:6379
+      listName: task_queue
+      listLength: "1"
+    authenticationRef:
+      name: redis-trigger-auth

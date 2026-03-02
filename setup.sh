@@ -43,6 +43,29 @@ else
 
 fi
 
+# Docker Images Config
+
+while true; do
+
+    read -p "Build this project Docker Images? [y/N] " yn
+
+    case $yn in 
+            no | N | n | "" )
+                echo "Ok, we will proceed with the setup"
+                break;;
+            yes | Y | y )
+                echo "Ok, docker images will be built and loaded to the cluster."
+
+                docker build -t rpa_kind_playwright/job-orchestrator:1.0 ./k8s/JobOrchestrator/docker/
+                kind load docker-image rpa_kind_playwright/job-orchestrator:1.0 --name "$KIND_CLUSTER_NAME"
+
+                break;;
+            * )
+                echo "Invalid response"
+    esac
+
+done
+
 # Kubectl Executions
 
 ## Java WorkLoader
@@ -52,7 +75,6 @@ kubectl apply -f ./k8s/JavaWorkLoader/PV.yaml
 kubectl apply -f ./k8s/JavaWorkLoader/PVC.yaml
 
 ## Redis Server
-echo "Redis Server Config"
 kubectl apply -f ./k8s/redis/namespace.yaml
 kubectl apply -f ./k8s/redis/configmap.yaml
 kubectl apply -f ./k8s/redis/deployment.yaml
@@ -62,7 +84,7 @@ kubectl apply -f ./k8s/redis/service.yaml
 kubectl apply -f https://github.com/kedacore/keda/releases/download/v2.10.1/keda-2.10.1.yaml
 kubectl wait --for=condition=ready pod -l app=keda-operator -n keda --timeout=60s
 kubectl apply -f ./k8s/KEDA/keda-trigger-auth.yaml
-kubectl apply -f ./k8s/KEDA/keda-scaled-object.yaml
+kubectl apply -f ./k8s/KEDA/keda-scaled-job.yaml
 
 ## Job Orchestrator
 kubectl apply -f ./k8s/JobOrchestrator/namespace.yaml
