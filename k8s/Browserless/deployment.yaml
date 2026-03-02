@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: browserless
+  namespace: browserless
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: browserless
+  template:
+    metadata:
+      labels:
+        app: browserless
+    spec:
+      containers:
+        - name: browserless
+          image: browserless/chrome:latest
+          ports:
+            - containerPort: 3000
+
+          env:
+            - name: MAX_CONCURRENT_SESSIONS
+              value: "10"
+            - name: PREBOOT_CHROME
+              value: "true"
+            - name: KEEP_ALIVE
+              value: "true"
+            - name: CONNECTION_TIMEOUT
+              value: "600000"
+
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: browserless-token
+                  key: TOKEN
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"

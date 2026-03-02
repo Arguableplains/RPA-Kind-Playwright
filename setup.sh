@@ -62,7 +62,7 @@ kubectl apply -f ./k8s/redis/service.yaml
 kubectl apply -f https://github.com/kedacore/keda/releases/download/v2.10.1/keda-2.10.1.yaml
 kubectl wait --for=condition=ready pod -l app=keda-operator -n keda --timeout=60s
 kubectl apply -f ./k8s/KEDA/keda-trigger-auth.yaml
-kubectl apply -f ./k8s/KEDA/keda-scaled-job.yaml
+kubectl apply -f ./k8s/KEDA/keda-scaled-object.yaml
 
 ## Job Orchestrator
 kubectl apply -f ./k8s/JobOrchestrator/namespace.yaml
