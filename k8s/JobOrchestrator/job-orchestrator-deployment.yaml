@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-orchestrator
+  namespace: job-orchestrator
+  labels:
+    app: job-orchestrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-orchestrator
+  template:
+    metadata:
+      labels:
+        app: job-orchestrator
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: job-orchestrator
+        image: python:3.13.12-slim
+        command: ["python3"]
+        args:
+          - "/data/job-orchestrator/orchestrator.py"
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: job-orchestrator-volume
+          mountPath: /data/job-orchestrator/
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
+      - name: job-orchestrator-volume
+        persistentVolumeClaim:
+            claimName: job-orchestrator-storage

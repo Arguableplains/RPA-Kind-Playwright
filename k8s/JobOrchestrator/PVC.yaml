@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: job-orchestrator-storage
+  namespace: job-orchestrator
+  labels:
+    app: job-orchestrator-storage
+spec:
+  storageClassName: standard
+  volumeName: job-orchestrator-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
