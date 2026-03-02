@@ -1,5 +1,6 @@
 import redis.clients.jedis.Jedis;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 
 public class TaskPublisher {
 
@@ -12,9 +13,11 @@ public class TaskPublisher {
     public static void main(String[] args) {
         try (Jedis jedis = new Jedis(REDIS_HOST, REDIS_PORT)) {
 
+            TaskType randomType = TaskType.values()[(int) (Math.random() * TaskType.values().length)];
+
             Task task = new Task(
-                    "generate-report",
-                    42L,
+                    randomType.name(),
+                    UUID.randomUUID().toString(),
                     "2026-03-01",
                     "2026-03-31"
             );

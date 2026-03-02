@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>RedisTaskPublisher</mainClass>
+                  <mainClass>TaskPublisher</mainClass>
                 </transformer>
               </transformers>
             </configuration>
