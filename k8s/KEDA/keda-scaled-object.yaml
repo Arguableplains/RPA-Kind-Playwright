@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: job-orchestrator-scaled
+  namespace: job-orchestrator
+spec:
+  scaleTargetRef:
+    name: job-orchestrator
+    kind: Deployment
+  pollingInterval: 5
+  cooldownPeriod: 300
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  triggers:
+  - type: redis
+    metadata:
+      address: redis-server.redis-server.svc.cluster.local:6379
+      listName: task_queue
+      listLength: "1"
+    authenticationRef:
+      name: redis-trigger-auth
