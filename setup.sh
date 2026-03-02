@@ -28,9 +28,9 @@ if kind get clusters 2>/dev/null | grep -q "$KIND_CLUSTER_NAME"; then
                 kind delete cluster --name "$KIND_CLUSTER_NAME"
 
                 echo "Creating new Kind Cluster."
-                kind create cluster --name "$KIND_CLUSTER_NAME" --wait 60s
+                kind create cluster --name "$KIND_CLUSTER_NAME" --wait 60s --config ./k8s/KIND/kind-config.yaml
 
-                exit;;
+                break;;
             * )
                 echo "Invalid response"
         esac
@@ -39,23 +39,28 @@ if kind get clusters 2>/dev/null | grep -q "$KIND_CLUSTER_NAME"; then
 
 else
 
-    kind create cluster --name "$KIND_CLUSTER_NAME" --wait 60s
+    kind create cluster --name "$KIND_CLUSTER_NAME" --wait 60s --config ./k8s/KIND/kind-config.yaml
 
 fi
 
 # Kubectl Executions
 
+## Java WorkLoader
+echo "Java WorkLoader Config"
+kubectl apply -f ./k8s/JavaWorkLoader/namespace.yaml
+kubectl apply -f ./k8s/JavaWorkLoader/configmap.yaml
+kubectl apply -f ./k8s/JavaWorkLoader/PV.yaml
+kubectl apply -f ./k8s/JavaWorkLoader/PVC.yaml
+
 ## Redis Server
+echo "Redis Server Config"
 kubectl apply -f ./k8s/redis/namespace.yaml
 kubectl apply -f ./k8s/redis/configmap.yaml
 kubectl apply -f ./k8s/redis/deployment.yaml
 kubectl apply -f ./k8s/redis/service.yaml
 
-
 ## KEDA
 
-
 ## Job Orchestrator
-
 
 ## Browseless Deployment
