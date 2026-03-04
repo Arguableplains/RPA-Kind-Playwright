@@ -30,6 +30,16 @@ RPA-Kind-Playwright is a Kubernetes-native Robotic Process Automation (RPA) plat
 
 ## Quick Start
 
+### OS
+
+#### Windows
+
+For Windows environments, it will be needed  this project to be executed inside a WLS (Windows Subsystem for Linux) terminal. See how to install it here:  [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+#### Linux
+
+Any Linux distribution capable of running bash files will be able to test this project.
+
 ### Prerequisites
 
 - Docker Desktop (with Kubernetes enabled)
@@ -48,6 +58,7 @@ RPA-Kind-Playwright is a Kubernetes-native Robotic Process Automation (RPA) plat
 
 2. **Run the setup script**
    ```bash
+   chmod +x ./setup.sh
    ./setup.sh
    ```
 
@@ -58,11 +69,19 @@ RPA-Kind-Playwright is a Kubernetes-native Robotic Process Automation (RPA) plat
 
 3. **Create sample jobs**
    ```bash
+   chmod +x ./create-jobs.sh
    ./create-jobs.sh 5
    ```
 
    Creates 5 sample jobs in the Java WorkLoader namespace.
+   
+   When finished, the jobs will create 5 screenshots in "/data/output" directory, each one with their respective task id.
+   
+#### Installation Recording
 
+If you want to see the setup script execution, you can use this link to Asciinema:
+[![asciicast](https://asciinema.org/a/KW9BoyS3EfS5BdQk.svg)](https://asciinema.org/a/KW9BoyS3EfS5BdQk)
+   
 ## Project Structure
 
 ```
@@ -89,18 +108,18 @@ RPA-Kind-Playwright/
 
 ### Available Test Robots
 
-1. **generate_invoice** - Invoice generation automation
-2. **run_analytics** - Data analytics processing
-3. **cleanup_cache** - Cache maintenance
-4. **sync_data** - Data synchronization
-5. **backup_database** - Database backup
-6. **process_payment** - Payment processing
-7. **send_email** - Email automation
-8. **generate_report** - Report generation
+1. **generate_invoice**
+2. **run_analytics**
+3. **cleanup_cache**
+4. **sync_data**
+5. **backup_database**
+6. **process_payment**
+7. **send_email**
+8. **generate_report**
 
 ### Robot Development
 
-Each robot is a Python script using Playwright with Browserless token authentication:
+Each robot is a Python script using Playwright with Browserless token authentication that performs a browser navigation and a screenshot (sample automation scenario):
 
 ```python
 import os
@@ -169,19 +188,12 @@ triggers:
 
 ## Monitoring & Debugging
 
-### Check Cluster Status
+### Check Pods Status
 
 ```bash
 kubectl get pods --all-namespaces
-kubectl logs -f job-orchestrator-scaled-xxxx -n keda-rpa
-```
-
-### View Job Status
-
-```bash
-kubectl get jobs -n java-work-loader
-kubectl describe job jar-runner-job-xxxx -n java-work-loader
-```
+kubectl logs -f pod/<pod choosen to see its logs> -n <namespace>
+``` 
 
 ## Security Considerations
 
@@ -207,24 +219,6 @@ kubectl describe job jar-runner-job-xxxx -n java-work-loader
 
 4. **Robot execution failures**
    Check robot logs: `kubectl logs job/xxxx -n robots`
-
-## Development Workflow
-
-1. **Build changes**
-   ```bash
-   docker buildx build -t rpa_kind_playwright/robot-name:1.0 ./k8s/JobOrchestrator/robots/robot-name/
-   kind load docker-image rpa_kind_playwright/robot-name:1.0
-   ```
-
-2. **Deploy updates**
-   ```bash
-   kubectl apply -f ./k8s/JobOrchestrator/robots/robot-name/Dockerfile
-   ```
-
-3. **Test locally**
-   ```bash
-   docker run -it --rm rpa_kind_playwright/robot-name:1.0
-   ```
 
 ## Contributing
 
