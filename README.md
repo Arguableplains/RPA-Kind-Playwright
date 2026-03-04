@@ -34,7 +34,7 @@ RPA-Kind-Playwright is a Kubernetes-native Robotic Process Automation (RPA) plat
 
 #### Windows
 
-For Windows environments, it will be needed  this project to be executed inside a WLS (Windows Subsystem for Linux) terminal. See how to install it here:  [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+For Windows environments, this project needs to  be executed inside a WLS (Windows Subsystem for Linux) terminal. See how to install it here:  [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 
 #### Linux
 
