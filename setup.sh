@@ -6,6 +6,14 @@ set -euo pipefail
 # Helpers
 ############################################
 
+############################################
+## Variables
+############################################
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+KIND_CLUSTER_NAME="rpa-poc-cluster"
+ROBOTS_DIR="./k8s/JobOrchestrator/robots"
+
 log_info()    { echo -e "\033[1;34m[INFO]\033[0m $1"; }
 log_success() { echo -e "\033[1;32m[SUCCESS]\033[0m $1"; }
 log_warn()    { echo -e "\033[1;33m[WARNING]\033[0m $1"; }
@@ -14,7 +22,7 @@ log_error()   { echo -e "\033[1;31m[ERROR]\033[0m $1"; }
 step() {
   echo
   echo "=============================================="
-  echo "🚀 $1"
+  echo "$1"
   echo "=============================================="
 }
 
@@ -40,6 +48,7 @@ require_command kubectl
 require_command kind
 require_command grep
 require_command awk
+require_command mvn
 
 log_info "Checking Docker daemon..."
 
@@ -70,12 +79,43 @@ else
 fi
 
 ############################################
-# Variables
+# JAVA COMPILATION
 ############################################
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-KIND_CLUSTER_NAME="rpa-poc-cluster"
-ROBOTS_DIR="./k8s/JobOrchestrator/robots"
+step "COMPILING JAVA REDIS TASK PUBLISHER"
+
+log_info "Checking if Maven is available..."
+
+if ! command -v mvn &>/dev/null; then
+    log_error "Maven (mvn) is not found. Java compilation will fail."
+    log_warn "Please install Maven or skip Java compilation."
+else
+    log_success "Maven found. Proceeding with compilation."
+    
+    cd "./java/redis-task-publisher"
+    
+    log_info "Compiling Java Redis Task Publisher..."
+    
+    if mvn clean package -q; then
+        log_success "Java compilation successful."
+        
+        log_info "Moving compiled JAR file to main java directory..."
+        
+        # Move the JAR file to the main java directory and rename it
+        if [ -f "$SCRIPT_DIR/java/redis-task-publisher/target/redis-task-publisher-1.0-SNAPSHOT.jar" ]; then
+            cp "$SCRIPT_DIR/java/redis-task-publisher/target/redis-task-publisher-1.0-SNAPSHOT.jar" "$SCRIPT_DIR/java/redis-task-publisher.jar"
+            log_success "JAR file moved and renamed successfully: redis-task-publisher.jar"
+        else
+            log_warn "JAR file not found. Expected: ./java/redis-task-publisher/target/redis-task-publisher-1.0-SNAPSHOT.jar"
+        fi
+        
+        log_success "Java files compiled and copied successfully."
+        
+    else
+        log_error "Java compilation failed."
+        log_warn "Continuing with setup (may cause issues with Java WorkLoader)."
+    fi
+fi
 
 cd "$SCRIPT_DIR"
 
