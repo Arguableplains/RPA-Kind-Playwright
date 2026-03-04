@@ -24,6 +24,10 @@ RPA-Kind-Playwright is a Kubernetes-native Robotic Process Automation (RPA) plat
 - **Java** - Task publishing
 - **Docker** - Containerization
 
+### Diagram
+
+![plot](./docs/mermaid-diagram.png)
+
 ## Quick Start
 
 ### Prerequisites
