@@ -3,7 +3,5 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     extraMounts:
-      - hostPath: /data/jar-runner
-        containerPath: /data/jar-runner
-      - hostPath: /data/job-orchestrator
-        containerPath: /data/job-orchestrator/
+      - hostPath: /data/output
+        containerPath: /data/output
