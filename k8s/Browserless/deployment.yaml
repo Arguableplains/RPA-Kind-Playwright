@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: browserless
-          image: browserless/chrome:latest
+          image: ghcr.io/browserless/chromium:v2.42.0
           ports:
             - containerPort: 3000
 
