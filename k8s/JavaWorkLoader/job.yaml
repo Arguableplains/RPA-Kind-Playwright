@@ -16,15 +16,4 @@ spec:
       restartPolicy: Never
       containers:
         - name: jar-runner
-          image: eclipse-temurin:21
-          command: ["java"]
-          args:
-            - "-jar"
-            - "/data/jar-runner/redis-task-publisher.jar"
-          volumeMounts:
-            - name: jar-volume
-              mountPath: /data/jar-runner
-      volumes:
-        - name: jar-volume
-          persistentVolumeClaim:
-            claimName: jar-storage
+          image: rpa_kind_playwright/redis-task-publisher:1.0
